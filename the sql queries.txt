@@ -1,0 +1,54 @@
+/*(the 1st query)[Countries contributions in purchasing]
+-----------------*/
+SELECT i.BillingCountry,
+       sum(il.UnitPrice*il.Quantity) invoice_price
+FROM Invoice i
+JOIN InvoiceLine il ON i.InvoiceId=il.InvoiceId
+GROUP BY 1
+ORDER BY 2 DESC;
+/*---------------------------------------------------------------------------
+
+(the 2nd query)[Perchases of different states of USA]
+-----------------*/
+SELECT DISTINCT c.State,
+                count(*) count_of_purchases_from_the_state
+FROM Customer c
+JOIN Invoice i ON c.CustomerId=i.CustomerId
+JOIN InvoiceLine il ON i.InvoiceId=il.InvoiceId
+WHERE Country= 'USA'
+GROUP BY 1
+ORDER BY 2 DESC;
+/*----------------------------------------------------------------------------
+
+(*the 3rd query*)[Popularity of genres]
+-----------------*/
+SELECT g.Name genre_name,
+       count(*) purchasing_per_genre
+FROM Genre g
+JOIN Track t ON g.GenreId=t.GenreId
+JOIN InvoiceLine il ON t.TrackId=il.TrackId
+JOIN Invoice i ON i.InvoiceId=il.InvoiceId
+GROUP BY 1
+ORDER BY 2 DESC;
+/*----------------------------------------------------------------------------
+
+(*the 4th query*)[what are the mediatypes produced by the store?]
+-----------------*/
+SELECT m.name,
+       count(*) count_of_tracks
+FROM MediaType m
+JOIN Track t ON m.MediaTypeId=t.MediaTypeId
+GROUP BY 1
+ORDER BY 2 DESC;
+/*------------------------------------------------------------------------------
+
+(*the 5th query*)[Contributions of employed sales support agents]
+-----------------*/
+SELECT e.FirstName||' '||e.LastName full_name,
+       e.Title,
+       count(*) count_of_sales
+FROM Employee e
+JOIN Customer c ON e.EmployeeId=c.SupportRepId
+GROUP BY 1,
+         2
+ORDER BY 2 DESC;
